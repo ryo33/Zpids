@@ -26,6 +26,10 @@ config :logger, :console,
 config :zpid_web, :generators,
   context_app: :zpid
 
+config :zpid_web, Zpid.Web.Guardian,
+  issuer: "Zpid",
+  secret_key: System.get_env("GUARDIAN_SECRET_KEY") || "abcd"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

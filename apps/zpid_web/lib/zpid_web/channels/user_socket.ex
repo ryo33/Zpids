@@ -2,25 +2,21 @@ defmodule Zpid.Web.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", Zpid.Web.RoomChannel
+  channel "user:*", Zpid.Web.UserChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
   # transport :longpoll, Phoenix.Transports.LongPoll
 
-  # Socket params are passed from the client and can
-  # be used to verify and authenticate a user. After
-  # verification, you can put default assigns into
-  # the socket that will be set for all channels, ie
-  #
-  #     {:ok, assign(socket, :user_id, verified_user_id)}
-  #
-  # To deny connection, return `:error`.
-  #
-  # See `Phoenix.Token` documentation for examples in
-  # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(%{"token" => token}, socket) do
+    case Zpid.Web.Guardian.resource_from_token(token) do
+      {:ok, user, claims} ->
+        socket = socket
+                 |> assign(:user, user)
+        {:ok, socket}
+      _ ->
+        {:ok, socket}
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

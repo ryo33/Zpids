@@ -7,9 +7,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello Zpid!</title>
+    <title>Zpid</title>
   </head>
 
   <body>
+    <%= render @view_module, @view_template, assigns %>
   </body>
 </html>

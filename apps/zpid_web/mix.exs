@@ -39,7 +39,10 @@ defmodule Zpid.Web.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
      {:zpid, in_umbrella: true},
-     {:cowboy, "~> 1.0"}]
+     {:cowboy, "~> 1.0"},
+     {:comeonin, "~> 4.0"},
+     {:argon2_elixir, "~> 1.2"},
+     {:guardian, "~> 1.0-beta"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
