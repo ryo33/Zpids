@@ -12,14 +12,17 @@ defmodule Zpid.Web.Guardian do
     end
   end
 
+  @impl Guardian
   def subject_for_token(%User{} = user, _claims) do
     {:ok, "user:#{user.id}"}
   end
 
+  @impl Guardian
   def subject_for_token(_, _) do
     {:error, :reason_for_error}
   end
 
+  @impl Guardian
   def resource_from_claims(claims) do
     case claims["sub"] do
       "user:" <> user_id ->

@@ -6,7 +6,7 @@ defmodule Zpid.Web.PageController do
       nil ->
         redirect conn, to: session_path(conn, :login)
       user ->
-        {:ok, token, claims} = Zpid.Web.Guardian.encode_and_sign(user)
+        {:ok, token, _claims} = Zpid.Web.Guardian.encode_and_sign(user)
         render conn, "index.html", token: token, user: user
     end
   end

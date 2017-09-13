@@ -2,7 +2,7 @@ import ObjectRegistry from './object_registry.js'
 import PointerLock from './pointer_lock.js'
 import KeyHandler from './key_handler.js'
 import MouseHandler from './mouse_handler.js'
-import Channel from './channel.js'
+import channel from './channel.js'
 import { WIDTH, HEIGHT } from './constants.js'
 
 class Zpid {
@@ -47,7 +47,15 @@ class Zpid {
     this.app.stage.addChild(gameContainer)
     this.app.stage.addChild(uiContainer)
     // channel
-    this.channel = new Channel()
+    this.channel = channel
+    channel.join()
+      .receive('ok', ({ id }) => {
+        console.log('Joined successfully', id)
+        this.playerId = id
+      })
+      .receive('error', resp => {
+        alert('Failed to join a channel')
+      })
   }
 
   onResize() {

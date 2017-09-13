@@ -13,6 +13,7 @@ defmodule Zpid.Web.UserController do
     case Account.create_user(user_params) do
       {:ok, user} ->
         conn
+        |> Zpid.Web.Guardian.Plug.sign_in(user)
         |> redirect(to: page_path(conn, :index))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)

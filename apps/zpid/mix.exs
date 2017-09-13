@@ -32,7 +32,9 @@ defmodule Zpid.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [{:postgrex, ">= 0.0.0"},
-     {:ecto, "~> 2.1"}]
+     {:ecto, "~> 2.1"},
+     {:comeonin, "~> 4.0"},
+     {:uuid, "~> 1.1"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

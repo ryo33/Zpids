@@ -49,6 +49,9 @@ class ZpidObject {
         sprite.scale.x = value / sprite.texture.width
       } else if (name == 'height') {
         sprite.scale.y = value / sprite.texture.height
+      } else if (name == 'pivot') {
+        sprite.pivot.x = value.x
+        sprite.pivot.y = value.y
       } else if (name == 'anchor') {
         sprite.anchor.x = value.x
         sprite.anchor.y = value.y

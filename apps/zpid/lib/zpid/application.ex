@@ -9,11 +9,14 @@ defmodule Zpid.Application do
   """
   use Application
 
+  @children Application.get_env(:zpid, Zpid.Application, [children: []])[:children]
+
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     Supervisor.start_link([
       supervisor(Zpid.Repo, []),
-    ], strategy: :one_for_one, name: Zpid.Supervisor)
+      {Registry, keys: :duplicate, name: Zpid.Dispatcher},
+    ] ++ @children, strategy: :one_for_one, name: Zpid.Supervisor)
   end
 end
