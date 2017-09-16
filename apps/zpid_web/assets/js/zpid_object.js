@@ -1,12 +1,10 @@
 const DIRECTRY_UPDATE_KEYS = [
   'x', 'y', 'rotation', 'visible', 'alpha',
-  'interactive', 'animationSpeed']
+  'interactive']
 
 class ZpidObject {
-  constructor(object) {
-    this.object = object
+  constructor(sprites, state) {
     this.sprites = {}
-    const { sprites, state } = object
     this.container = new PIXI.Container()
     Object.keys(sprites).forEach(name => {
       this.container.addChild(this.createSprite(name, sprites[name]))
@@ -14,9 +12,10 @@ class ZpidObject {
     this.applyState(state)
   }
 
-  createSprite(name, { imageUrl, frames, children }) {
+  createSprite(name, { image_url: imageUrl, frames, children }) {
     const base = PIXI.Texture.fromImage(imageUrl)
-    const textures = frames.map(rect => {
+    const textures = frames.map(({ x, y, width, height }) => {
+      const rect = new PIXI.Rectangle(x, y, width, height)
       return new PIXI.Texture(base, rect)
     })
     const sprite = textures.length == 1
@@ -55,6 +54,8 @@ class ZpidObject {
       } else if (name == 'anchor') {
         sprite.anchor.x = value.x
         sprite.anchor.y = value.y
+      } else if (name == 'animation_speed') {
+        sprite.animationSpeed = value
       } else if (name == 'play') {
         if (value) {
           sprite.play()

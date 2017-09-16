@@ -6,8 +6,8 @@ class ObjectRegistry {
     this.objects = {}
   }
 
-  add(id, object) {
-    const zpidObject = new ZpidObject(object)
+  add(id, sprites, state) {
+    const zpidObject = new ZpidObject(sprites, state)
     this.objects[id] = zpidObject
     this.container.addChild(zpidObject.container)
   }

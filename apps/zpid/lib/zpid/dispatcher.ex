@@ -1,5 +1,6 @@
 defmodule Zpid.Dispatcher do
   use GenServer
+  require Logger
 
   @spec dispatch(Zpid.Event.t) :: :ok
   def dispatch(event) do

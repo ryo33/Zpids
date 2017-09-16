@@ -4,7 +4,7 @@ defmodule Zpid.Clock do
   @fps [60, 30, 10, 1]
   @frame Enum.map(@fps, &(60 / &1 - 1))
 
-  alias Zpid.Dispatcher
+  import Zpid.Dispatcher, only: [dispatch: 1]
   alias __MODULE__.Tick
 
   def start_link(_opts) do
@@ -23,7 +23,7 @@ defmodule Zpid.Clock do
 
   defp tick([count | tail1], [fps | tail2], [frame | tail3]) do
     if count == frame do
-      Dispatcher.dispatch(%Tick{fps: fps})
+      dispatch(%Tick{fps: fps})
       [0 | tick(tail1, tail2, tail3)]
     else
       [count+1 | tick(tail1, tail2, tail3)]

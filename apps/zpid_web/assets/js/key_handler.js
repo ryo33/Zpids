@@ -2,10 +2,10 @@ import keycode from 'keycode'
 import objectPath from 'object-path'
 
 const defaultKeymap = {
-  up: 'w',
-  down: 's',
-  left: 'a',
-  right: 'd',
+  w: 'w',
+  s: 's',
+  a: 'a',
+  d: 'd',
   pointer: 'ctrl',
   dash: 'shift',
   step: 'space',
