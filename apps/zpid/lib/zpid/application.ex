@@ -16,7 +16,7 @@ defmodule Zpid.Application do
 
     Supervisor.start_link([
       supervisor(Zpid.Repo, []),
-      {Registry, keys: :duplicate, name: Zpid.Dispatcher},
+      {Registry, keys: :duplicate, name: Zpid.EventDispatcher},
     ] ++ @children, strategy: :one_for_one, name: Zpid.Supervisor)
   end
 end

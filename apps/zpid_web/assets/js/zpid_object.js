@@ -1,69 +1,93 @@
 const DIRECTRY_UPDATE_KEYS = [
-  'x', 'y', 'rotation', 'visible', 'alpha',
-  'interactive']
+  'x', 'y', 'rotation', 'visible', 'alpha']
 
 class ZpidObject {
-  constructor(sprites, state) {
-    this.sprites = {}
+  constructor(definitions, state) {
+    this.objects = {}
+    this.parent = null
     this.container = new PIXI.Container()
-    Object.keys(sprites).forEach(name => {
-      this.container.addChild(this.createSprite(name, sprites[name]))
+    Object.keys(definitions).forEach(name => {
+      this.container.addChild(this.createObject(name, definitions[name]))
     })
     this.applyState(state)
   }
 
-  createSprite(name, { image_url: imageUrl, frames, children }) {
+  createObject(name, params) {
+    const {
+      children,
+      container,
+      sprite,
+      animated_sprite: animatedSprite,
+      parent
+    } = params
+    let object
+    if (container) {
+      object = new PIXI.Container()
+    } else if (sprite) {
+      const { image_url: imageUrl, frame } = sprite
+      const [texture] = this.createTextures(imageUrl, [frame])
+      object = new PIXI.Sprite(texture)
+    } else if (animatedSprite) {
+      const { image_url: imageUrl, frames } = animatedSprite
+      const textures = this.createTextures(imageUrl, frames)
+      object = new PIXI.extras.AnimatedSprite(textures)
+    }
+    if (parent) {
+      this.parent = object
+    }
+    if (children) {
+      Object.keys(children).forEach(name => {
+        object.addChild(this.createObject(name, children[name]))
+      })
+    }
+    this.objects[name] = object
+    return object
+  }
+
+  createTextures(imageUrl, frames) {
     const base = PIXI.Texture.fromImage(imageUrl)
-    const textures = frames.map(({ x, y, width, height }) => {
+    return frames.map(({ x, y, width, height }) => {
       const rect = new PIXI.Rectangle(x, y, width, height)
       return new PIXI.Texture(base, rect)
     })
-    const sprite = textures.length == 1
-      ? new PIXI.Sprite(textures[0])
-      : new PIXI.extras.AnimatedSprite(textures)
-    if (children) {
-      Object.keys(children).forEach(name => {
-        sprite.addChild(this.createSprite(name, children[name]))
-      })
-    }
-    this.sprites[name] = sprite
-    return sprite
   }
 
   applyState(state) {
     Object.keys(state).forEach(name => {
-      this.applySpriteState(name, state[name])
+      this.applyObjectState(name, state[name])
     })
   }
 
-  applySpriteState(name, state) {
-    const sprite = this.sprites[name]
+  applyObjectState(name, state) {
+    const object = this.objects[name]
     Object.keys(state).forEach(name => {
       const value = state[name]
       if (name == 'x') {
-        sprite.position.x = value
+        object.position.x = value
       } else if (name == 'y') {
-        sprite.position.y = value
-      } else if (name == 'width') {
-        sprite.scale.x = value / sprite.texture.width
-      } else if (name == 'height') {
-        sprite.scale.y = value / sprite.texture.height
-      } else if (name == 'pivot') {
-        sprite.pivot.x = value.x
-        sprite.pivot.y = value.y
-      } else if (name == 'anchor') {
-        sprite.anchor.x = value.x
-        sprite.anchor.y = value.y
+        object.position.y = value
+      } else if (name == 'scale_x') {
+        object.scale.x = value
+      } else if (name == 'scale_y') {
+        object.scale.y = value
+      } else if (name == 'pivot_x') {
+        object.pivot.x = value
+      } else if (name == 'pivot_y') {
+        object.pivot.y = value
+      } else if (name == 'anchor_x') {
+        object.anchor.x = value
+      } else if (name == 'anchor_y') {
+        object.anchor.y = value
       } else if (name == 'animation_speed') {
-        sprite.animationSpeed = value
+        object.animationSpeed = value
       } else if (name == 'play') {
         if (value) {
-          sprite.play()
+          object.play()
         } else {
-          sprite.stop()
+          object.stop()
         }
       } else if (DIRECTRY_UPDATE_KEYS.includes(name)) {
-        sprite[name] = value
+        object[name] = value
       } else {
         console.error('unknown state for zpid object')
       }

@@ -32,20 +32,9 @@ class Zpid {
     this.pointer = new PointerLock(this.app.view,
       (x, y) => this.mouseHandler.handleMove(x, y))
     // containers
-    const gameContainer = new PIXI.Container()
-    const uiContainer = new PIXI.Container()
-    const gameObjects = new ObjectRegistry(gameContainer)
-    const uiObjects = new ObjectRegistry(uiContainer)
-    this.game = {
-      container: gameContainer,
-      objects: gameObjects
-    }
-    this.ui = {
-      container: uiContainer,
-      objects: uiObjects
-    }
-    this.app.stage.addChild(gameContainer)
-    this.app.stage.addChild(uiContainer)
+    const container = new PIXI.Container()
+    this.registry = new ObjectRegistry(container)
+    this.app.stage.addChild(container)
     // channel
     this.channel = channel
     channel.join()
@@ -54,7 +43,7 @@ class Zpid {
         this.playerId = id
       })
       .receive('error', resp => {
-        alert('Failed to join a channel')
+        console.error('Failed to join a channel')
       })
   }
 

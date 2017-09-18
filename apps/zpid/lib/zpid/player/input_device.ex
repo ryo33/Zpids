@@ -1,7 +1,7 @@
 defmodule Zpid.Player.InputDevice do
   use GenServer
 
-  import Zpid.Dispatcher, only: [listen: 1, dispatch: 1]
+  import Zpid.EventDispatcher, only: [listen: 1, dispatch: 1]
   alias Zpid.Player.Input
   alias Zpid.Player.Operation
   alias Zpid.Clock.Tick

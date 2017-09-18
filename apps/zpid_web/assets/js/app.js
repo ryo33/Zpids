@@ -11,14 +11,17 @@ graphics.beginFill(0xFFFFFF)
 graphics.drawRect(0, 0, WIDTH, HEIGHT)
 zpid.app.stage.addChildAt(graphics, 0)
 // handlers
-zpid.channel.on('add_object', ({ id, sprites, state }) => {
-  zpid.game.objects.add(id, sprites, state)
+zpid.channel.on('add_object', ({ id, definition, state, parent_id: parentId }) => {
+  console.log(id, definition, state, parentId)
+  zpid.registry.add(id, definition, state, parentId)
 })
 zpid.channel.on('update_object', ({ id, state }) => {
-  console.log('update', state)
-  zpid.game.objects.update(id, state)
+  console.log(state)
+  zpid.registry.update(id, state)
 })
 // TODO on delete_object
+// zpid.channel.on('delete_object', ({ id }) => {
+// })
 const movement_keys = {w: false, s: false, a: false, d: false}
 const update_movement = (key, state) => {
   movement_keys[key] = state
@@ -44,10 +47,6 @@ zpid.keyHandler.on('dash', 'up', () => {
   zpid.channel.push('end_dash', {})
 })
 const CURSOR_SENSITIVITY = 0.005
-// scale
-const width_meter = 10
-const scale = WIDTH / width_meter
-zpid.game.container.setTransform(0, 0, scale, scale)
 // pointer
 const pointer = PIXI.Sprite.fromImage('/images/pointer.png')
 pointer.anchor.x = POINTER_POSITION.x

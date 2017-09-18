@@ -3,8 +3,8 @@ defmodule Zpid.Clock.Tick do
   @enforce_keys [:fps]
   defstruct [:fps]
 
-  def to_selectors(event) do
-    [{__MODULE__, event.fps}]
+  def to_selector(event) do
+    {__MODULE__, event.fps}
   end
 
   def fps60, do: {__MODULE__, 60}

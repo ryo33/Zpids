@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "patternProperties": {
+    ".*": {
+      "type": "object",
+      "anyOf": [
+        {"required": ["container"]},
+        {"required": ["sprite"]},
+        {"required": ["animated_sprite"]}
+      ],
+      "properties": {
+        "container": {
+          "type": "object",
+          "additionalProperties": false
+        },
+        "sprite": {
+          "properties": {
+            "image_url": {"type": "string"},
+            "frame": {"$ref": "#/definitions/rectangle"}
+          },
+          "required": ["image_url", "frame"],
+          "additionalProperties": false
+        },
+        "animated_sprite": {
+          "properties": {
+            "image_url": {"type": "string"},
+            "frames": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/rectangle"}
+            }
+          },
+          "required": ["image_url", "frames"],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#"
+          }
+        },
+        "parent": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "rectangle": {
+      "type": "object",
+      "properties": {
+        "x": {"type": "number"},
+        "y": {"type": "number"},
+        "width": {"type": "number"},
+        "height": {"type": "number"}
+      },
+      "required": ["x", "y", "width", "height"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -4,7 +4,7 @@ defmodule Zpid.Clock do
   @fps [60, 30, 10, 1]
   @frame Enum.map(@fps, &(60 / &1 - 1))
 
-  import Zpid.Dispatcher, only: [dispatch: 1]
+  import Zpid.EventDispatcher, only: [dispatch: 1]
   alias __MODULE__.Tick
 
   def start_link(_opts) do

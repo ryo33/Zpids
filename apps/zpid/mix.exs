@@ -34,7 +34,9 @@ defmodule Zpid.Mixfile do
     [{:postgrex, ">= 0.0.0"},
      {:ecto, "~> 2.1"},
      {:comeonin, "~> 4.0"},
-     {:uuid, "~> 1.1"}]
+     {:uuid, "~> 1.1"},
+     {:ex_json_schema, "~> 0.5.4"},
+     {:poison, "~> 3.1"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

@@ -1,13 +1,16 @@
 defmodule Zpid.Web.UserChannel do
   use Zpid.Web, :channel
 
-  import Zpid.Dispatcher, only: [listen: 1, dispatch: 1]
+  import Zpid.EventDispatcher, only: [listen: 1, dispatch: 1]
   alias Zpid.Account.User
   alias Zpid.Player
   alias Zpid.Player.Input
   alias Zpid.Player.InputDevice
   alias Zpid.Player.Operation
   alias Zpid.Display
+  alias Zpid.Display.Object
+  alias Zpid.Display.Container
+  alias Zpid.Display.Object.ContainerState
 
   def join("user:" <> user_id, _payload, socket) do
     user_id = String.to_integer(user_id)
@@ -21,10 +24,18 @@ defmodule Zpid.Web.UserChannel do
   def init(socket, user_id) do
     player_id = Zpid.ID.gen()
     display_id = Zpid.ID.gen()
+    container_id = Zpid.ID.gen()
     listen(Display.Event.for(display_id))
     Display.start_link(display_id)
     InputDevice.start_link(player_id)
-    Player.start_link(player_id, user_id, display_id)
+    state = %{
+      container: %ContainerState{
+        scale_x: 80,
+        scale_y: 80
+      }
+    }
+    dispatch(Object.create(display_id, Container, container_id, state))
+    Player.start_link(player_id, user_id, display_id, container_id)
     socket = socket |> assign(:player_id, player_id)
     {:ok, %{id: player_id}, socket}
   end
@@ -54,8 +65,9 @@ defmodule Zpid.Web.UserChannel do
       :add ->
         body = %{
           id: event.object_id,
-          sprites: event.params.sprites,
-          state: event.params.state
+          definition: event.params.definition,
+          state: event.params.state,
+          parent_id: event.params.parent_id
         }
         push socket, "add_object", body
       :update ->
