@@ -1,5 +1,4 @@
 import keycode from 'keycode'
-import objectPath from 'object-path'
 
 const defaultKeymap = {
   w: 'w',
