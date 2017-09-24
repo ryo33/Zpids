@@ -7,8 +7,10 @@ defmodule Zpid.Web.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Guardian.Plug.Pipeline, module: Zpid.Web.Guardian,
+                                 error_handler: Zpid.Web.AuthErrorHandler
     plug Guardian.Plug.VerifySession, module: Zpid.Web.Guardian
-    plug Guardian.Plug.LoadResource, module: Zpid.Web.Guardian
+    plug Guardian.Plug.LoadResource, module: Zpid.Web.Guardian, allow_blank: true
   end
 
   pipeline :api do

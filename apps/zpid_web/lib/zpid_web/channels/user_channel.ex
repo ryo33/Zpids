@@ -30,8 +30,8 @@ defmodule Zpid.Web.UserChannel do
     InputDevice.start_link(player_id)
     state = %{
       container: %ContainerState{
-        scale_x: 80,
-        scale_y: 80
+        scale_x: 160,
+        scale_y: 160
       }
     }
     dispatch(Object.create(display_id, Container, container_id, state))
