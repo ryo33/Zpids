@@ -10,7 +10,7 @@ defmodule Zpid.Web.UserSocket do
 
   def connect(%{"token" => token}, socket) do
     case Zpid.Web.Guardian.resource_from_token(token) do
-      {:ok, user, claims} ->
+      {:ok, user, _claims} ->
         socket = socket
                  |> assign(:user, user)
         {:ok, socket}

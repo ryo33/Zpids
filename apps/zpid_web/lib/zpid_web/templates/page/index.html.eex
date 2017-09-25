@@ -1,6 +1,8 @@
 <script>
 window.token = "<%= @token %>"
 window.userId = "<%= @user.id %>"
+window.WIDTH = <%= width() %>
+window.HEIGHT = <%= height() %>
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.1/pixi.min.js"></script>
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
