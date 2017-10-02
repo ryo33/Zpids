@@ -10,6 +10,10 @@ config :zpid_web,
   namespace: Zpid.Web,
   ecto_repos: [Zpid.Repo]
 
+config :zpid_web, Zpid.Web,
+  zpid_game_module: Zpid.Game,
+  zpid_game_client_module: Zpid.Game.Client
+
 # Configures the endpoint
 config :zpid_web, Zpid.Web.Endpoint,
   url: [host: "localhost"],

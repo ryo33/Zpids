@@ -18,7 +18,7 @@
             "image_url": {"type": "string"},
             "frame": {"$ref": "#/definitions/rectangle"}
           },
-          "required": ["image_url", "frame"],
+          "required": ["image_url"],
           "additionalProperties": false
         },
         "animated_sprite": {

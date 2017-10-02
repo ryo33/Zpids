@@ -1,7 +1,7 @@
 defmodule Zpid.Display.Object.State do
   @fields [x: 0, y: 0, rotation: 0,
            scale_x: 1, scale_y: 1,
-           pivot_x: 0, pivot_y: 0]
+           origin_x: 0, origin_y: 0]
   defmacro __using__(fields \\ []) do
     fields = @fields ++ fields
     quote do

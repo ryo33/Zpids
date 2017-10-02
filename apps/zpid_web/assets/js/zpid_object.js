@@ -25,8 +25,13 @@ class ZpidObject {
       object = new PIXI.Container()
     } else if (sprite) {
       const { image_url: imageUrl, frame } = sprite
-      const [texture] = this.createTextures(imageUrl, [frame])
-      object = new PIXI.Sprite(texture)
+      if (frame) {
+        const [texture] = this.createTextures(imageUrl, [frame])
+        object = new PIXI.Sprite(texture)
+      } else {
+        const texture = PIXI.Texture.fromImage(imageUrl)
+        object = new PIXI.Sprite(texture)
+      }
     } else if (animatedSprite) {
       const { image_url: imageUrl, frames } = animatedSprite
       const textures = this.createTextures(imageUrl, frames)
@@ -70,9 +75,9 @@ class ZpidObject {
         object.scale.x = value
       } else if (name == 'scale_y') {
         object.scale.y = value
-      } else if (name == 'pivot_x') {
+      } else if (name == 'origin_x') {
         object.pivot.x = value
-      } else if (name == 'pivot_y') {
+      } else if (name == 'origin_y') {
         object.pivot.y = value
       } else if (name == 'anchor_x') {
         object.anchor.x = value

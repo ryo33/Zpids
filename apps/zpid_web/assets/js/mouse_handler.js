@@ -1,10 +1,10 @@
 class MouseHandler {
-  constructor() {
-    document.addEventListener('mousedown',
+  constructor(element) {
+    element.addEventListener('mousedown',
       (e) => this.handleDown(e))
-    document.addEventListener('mouseup',
+    element.addEventListener('mouseup',
       (e) => this.handleUp(e))
-    document.addEventListener('wheel',
+    element.addEventListener('wheel',
       (e) => this.handleWheel(e))
     this.handlers = {}
     this.moveHandler = null

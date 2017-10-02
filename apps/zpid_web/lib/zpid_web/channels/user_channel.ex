@@ -3,14 +3,10 @@ defmodule Zpid.Web.UserChannel do
 
   import Zpid.EventDispatcher, only: [listen: 1, dispatch: 1]
   alias Zpid.Account.User
-  alias Zpid.Player
-  alias Zpid.Player.Input
-  alias Zpid.Player.InputDevice
-  alias Zpid.Player.Operation
+  alias Zpid.Input.Keyboard
+  alias Zpid.Input.MouseButton
+  alias Zpid.Input.MousePointer
   alias Zpid.Display
-  alias Zpid.Display.Object
-  alias Zpid.Display.Container
-  alias Zpid.Display.Object.ContainerState
 
   def join("user:" <> user_id, _payload, socket) do
     user_id = String.to_integer(user_id)
@@ -21,42 +17,47 @@ defmodule Zpid.Web.UserChannel do
     end
   end
 
-  def init(socket, user_id) do
-    player_id = Zpid.ID.gen()
-    display_id = Zpid.ID.gen()
-    container_id = Zpid.ID.gen()
-    listen(Display.Event.for(display_id))
-    Display.start_link(display_id)
-    InputDevice.start_link(player_id)
-    state = %{
-      container: %ContainerState{
-        scale_x: 160,
-        scale_y: 160
-      }
-    }
-    dispatch(Object.create(display_id, Container, container_id, state))
-    Player.start_link(player_id, user_id, display_id, container_id)
-    socket = socket |> assign(:player_id, player_id)
-    {:ok, %{id: player_id}, socket}
+  defp authorized?(socket, user_id) do
+    case socket.assigns.user do
+      %User{id: ^user_id} -> true
+      _ -> false
+    end
   end
 
-  def handle_in("movement", %{"x" => x, "y" => y}, socket) do
-    dispatch(Input.movement(socket.assigns[:player_id], x, y))
+  def init(socket, _user_id) do
+    client_id = Zpid.ID.gen()
+    listen(Display.Event.for(client_id))
+    Display.start_link(client_id)
+    game_module = Application.get_env(:zpid_web, Zpid.Web)[:zpid_game_module]
+    client_module = Application.get_env(:zpid_web, Zpid.Web)[:zpid_game_client_module]
+    {width, height} = game_module.display_size()
+    {:ok, _} = client_module.start_link(client_id)
+    socket = socket |> assign(:client_id, client_id)
+    {:ok, %{width: width, height: height}, socket}
+  end
+
+  def handle_in("keyboard_press", %{"key" => key}, socket) do
+    dispatch(Keyboard.press(socket.assigns.client_id, key))
     {:noreply, socket}
   end
 
-  def handle_in("rotation", %{"radian" => radian}, socket) do
-    dispatch(Operation.rotation(socket.assigns[:player_id], radian))
+  def handle_in("keyboard_release", %{"key" => key}, socket) do
+    dispatch(Keyboard.release(socket.assigns.client_id, key))
     {:noreply, socket}
   end
 
-  def handle_in("start_dash", _, socket) do
-    dispatch(Operation.start_dash(socket.assigns[:player_id]))
+  def handle_in("mouse_button_press", %{"button" => button}, socket) do
+    dispatch(MouseButton.press(socket.assigns.client_id, button))
     {:noreply, socket}
   end
 
-  def handle_in("end_dash", _, socket) do
-    dispatch(Operation.end_dash(socket.assigns[:player_id]))
+  def handle_in("mouse_button_release", %{"button" => button}, socket) do
+    dispatch(MouseButton.release(socket.assigns.client_id, button))
+    {:noreply, socket}
+  end
+
+  def handle_in("mouse_pointer", %{"x" => x, "y" => y}, socket) do
+    dispatch(MousePointer.move(socket.assigns.client_id, x, y))
     {:noreply, socket}
   end
 
@@ -81,12 +82,5 @@ defmodule Zpid.Web.UserChannel do
         push socket, "delete_object", body
     end
     {:noreply, socket}
-  end
-
-  defp authorized?(socket, user_id) do
-    case socket.assigns.user do
-      %User{id: ^user_id} -> true
-      _ -> false
-    end
   end
 end

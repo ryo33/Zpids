@@ -1,26 +1,11 @@
 import keycode from 'keycode'
 
-const defaultKeymap = {
-  w: 'w',
-  s: 's',
-  a: 'a',
-  d: 'd',
-  pointer: 'ctrl',
-  dash: 'shift',
-  step: 'space',
-  voice: 'tab'
-}
-
 class KeyHandler {
-  constructor(keymap = defaultKeymap) {
-    document.addEventListener('keydown',
+  constructor(element) {
+    element.addEventListener('keydown',
       (e) => this.handleKeyDown(e))
-    document.addEventListener('keyup',
+    element.addEventListener('keyup',
       (e) => this.handleKeyUp(e))
-    this.keymap = {}
-    Object.keys(keymap).forEach(operation => {
-      this.keymap[keymap[operation]] = operation
-    })
     this.handlers = {}
   }
   on(operation, upOrDown, handler) {
@@ -35,11 +20,8 @@ class KeyHandler {
     this.handle(e, 'up')
   }
   handle(e, upOrDown) {
-    const operation = this.keymap[keycode(e)]
-    if (!operation) return
-    const handler = this.handlers[`${operation}.${upOrDown}`]
-    if (!handler) return
-    handler()
+    const handler = this.handlers[`${keycode(e)}.${upOrDown}`]
+    if (handler) handler()
   }
 }
 

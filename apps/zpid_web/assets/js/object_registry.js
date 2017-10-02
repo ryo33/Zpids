@@ -11,7 +11,6 @@ class ObjectRegistry {
     this.objects[id] = zpidObject
     if (parentId) {
       const parent = this.objects[parentId].parent
-      console.log(parent)
       if (parent) {
         parent.addChild(zpidObject.container)
       } else {

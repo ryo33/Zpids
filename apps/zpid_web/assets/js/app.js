@@ -1,72 +1,51 @@
+import channel from './channel.js'
 import Zpid from './zpid.js'
 import ZpidObject from './zpid_object.js'
-import {
-  WIDTH, HEIGHT, POINTER_POSITION
-} from './constants.js'
 
-const zpid = new Zpid()
-// background
-const graphics = new PIXI.Graphics()
-graphics.beginFill(0xFFFFFF)
-graphics.drawRect(0, 0, WIDTH, HEIGHT)
-zpid.app.stage.addChildAt(graphics, 0)
-// handlers
-zpid.channel.on('add_object', ({ id, definition, state, parent_id: parentId }) => {
-  console.log(id, definition, state, parentId)
-  zpid.registry.add(id, definition, state, parentId)
-})
-zpid.channel.on('update_object', ({ id, state }) => {
-  console.log(state)
-  zpid.registry.update(id, state)
-})
-// TODO on delete_object
-// zpid.channel.on('delete_object', ({ id }) => {
-// })
-const movement_keys = {w: false, s: false, a: false, d: false}
-const update_movement = (key, state) => {
-  movement_keys[key] = state
-  const movement = {x: 0, y: 0}
-  if (movement_keys.w) movement.y -= 1
-  if (movement_keys.s) movement.y += 1
-  if (movement_keys.a) movement.x -= 1
-  if (movement_keys.d) movement.x += 1
-  zpid.channel.push('movement', movement)
+const start = (width, height) => {
+  document.body.style.margin = '0px'
+  const zpid = new Zpid({
+    parentElement: document.body,
+    frameWidth: window.innerWidth,
+    frameHeight: window.innerHeight,
+    virtualWidth: width,
+    virtualHeight: height
+  })
+  window.onresize = () => zpid.resize(window.innerWidth, window.innerHeight)
+  // background
+  const graphics = new PIXI.Graphics()
+  graphics.beginFill(0xFFFFFF)
+  graphics.drawRect(0, 0, width, height)
+  zpid.app.stage.addChildAt(graphics, 0)
+  // handlers
+  channel.on('add_object', ({ id, definition, state, parent_id: parentId }) => {
+    console.log(id, definition, state, parentId)
+    zpid.registry.add(id, definition, state, parentId)
+  })
+  channel.on('update_object', ({ id, state }) => {
+    console.log(state)
+    zpid.registry.update(id, state)
+  })
+  // TODO on delete_object
+  // channel.on('delete_object', ({ id }) => {
+  // })
+  ;['w', 'a', 's', 'd', 'shift'].forEach(key => {
+    zpid.keyHandler.on(key, 'down', () =>
+      channel.push('keyboard_press', {key}))
+    zpid.keyHandler.on(key, 'up', () =>
+      channel.push('keyboard_release', {key}))
+  })
+  // pointer
+  zpid.pointer.lock()
+  zpid.mouseHandler.onMove((x, y) => {
+    channel.push('mouse_pointer', {x, y})
+  })
 }
-zpid.keyHandler.on('w', 'down', () => update_movement('w', true))
-zpid.keyHandler.on('w', 'up', () => update_movement('w', false))
-zpid.keyHandler.on('s', 'down', () => update_movement('s', true))
-zpid.keyHandler.on('s', 'up', () => update_movement('s', false))
-zpid.keyHandler.on('a', 'down', () => update_movement('a', true))
-zpid.keyHandler.on('a', 'up', () => update_movement('a', false))
-zpid.keyHandler.on('d', 'down', () => update_movement('d', true))
-zpid.keyHandler.on('d', 'up', () => update_movement('d', false))
-zpid.keyHandler.on('dash', 'down', () => {
-  zpid.channel.push('start_dash', {})
-})
-zpid.keyHandler.on('dash', 'up', () => {
-  zpid.channel.push('end_dash', {})
-})
-const CURSOR_SENSITIVITY = 0.005
-// pointer
-const pointer = PIXI.Sprite.fromImage('/images/pointer.png')
-pointer.anchor.x = POINTER_POSITION.x
-pointer.anchor.y = POINTER_POSITION.y
-pointer.visible = false
-zpid.app.stage.addChild(pointer)
-zpid.keyHandler.on('pointer', 'down', () => {
-  pointer.visible = true
-  pointer.x = WIDTH / 2
-  pointer.y = HEIGHT / 2
-})
-zpid.keyHandler.on('pointer', 'up', () => {
-  pointer.visible = false
-})
-zpid.mouseHandler.onMove((x, y) => {
-  if (pointer.visible) {
-    pointer.x += x
-    pointer.y += y
-  } else {
-    const deltaRadian = x * CURSOR_SENSITIVITY
-    zpid.channel.push('rotation', {radian: deltaRadian})
-  }
-})
+
+channel.join()
+  .receive('ok', ({ width, height }) => {
+    start(width, height)
+  })
+  .receive('error', resp => {
+    console.error('Failed to join a channel')
+  })
