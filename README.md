@@ -1,4 +1,4 @@
-# Zpid
+# Zpids
 
 ## Dependencies
 
@@ -14,9 +14,9 @@
 
 ## Development
 
-1. Configure postgres parameters of `apps/zpid/config/dev.exs`
+1. Configure postgres parameters of `apps/zpids/config/dev.exs`
 2. Run `mix deps.get`
-3. Run `bash -c "cd apps/zpid_web/assets && npm install"`
+3. Run `bash -c "cd apps/zpids_web/assets && npm install"`
 3. Run `mix ecto.create`
 4. Run `mix ecto.migrate`
 5. Run `mix phx.run`

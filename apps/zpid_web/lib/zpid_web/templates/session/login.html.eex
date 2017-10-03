@@ -1,5 +1,0 @@
-<h2>Sign in</h2>
-
-<%= render Zpid.Web.UserView, "form.html", Map.put(assigns, :action, session_path(@conn, :create)) %>
-
-<a href="<%= user_path(@conn, :new) %>">Create an account</a>

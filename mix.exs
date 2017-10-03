@@ -1,4 +1,4 @@
-defmodule Zpid.Umbrella.Mixfile do
+defmodule Zpids.Umbrella.Mixfile do
   use Mix.Project
 
   def project do
