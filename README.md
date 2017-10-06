@@ -19,4 +19,4 @@
 3. Run `bash -c "cd apps/zpids_web/assets && npm install"`
 3. Run `mix ecto.create`
 4. Run `mix ecto.migrate`
-5. Run `mix phx.run`
+5. Run `mix phx.server`
