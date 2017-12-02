@@ -1,12 +1,12 @@
-defmodule Zpids.Account do
+defmodule Zpids.Game.Account do
   @moduledoc """
   The Account context.
   """
 
   import Ecto.Query, warn: false
-  alias Zpids.Repo
+  alias Zpids.Game.Repo
 
-  alias Zpids.Account.User
+  alias Zpids.Game.Account.User
 
   @doc """
   Gets a single user.

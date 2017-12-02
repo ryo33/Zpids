@@ -3,6 +3,8 @@
 /db
 /deps
 /*.ez
+/node_modules
+index.js*
 
 # Generated on crash by the VM
 erl_crash.dump

@@ -10,10 +10,7 @@ defmodule Zpids.Application do
   use Application
 
   def start(_type, _args) do
-    import Supervisor.Spec, warn: false
-
     children = [
-      supervisor(Zpids.Repo, []),
       {Registry, keys: :duplicate, name: Zpids.EventDispatcher},
     ]
     Supervisor.start_link(children,

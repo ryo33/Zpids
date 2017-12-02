@@ -1,8 +1,8 @@
 defmodule Zpids.Web.SessionController do
   use Zpids.Web, :controller
 
-  alias Zpids.Account
-  alias Zpids.Account.User
+  alias Zpids.Game.Account
+  alias Zpids.Game.Account.User
 
   def login(conn, _params) do
     changeset = Account.change_user(%User{})

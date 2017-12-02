@@ -2,7 +2,7 @@ defmodule Zpids.Web.UserChannel do
   use Zpids.Web, :channel
 
   import Zpids.EventDispatcher, only: [listen: 1, dispatch: 1]
-  alias Zpids.Account.User
+  alias Zpids.Game.Account.User
   alias Zpids.Input.Keyboard
   alias Zpids.Input.MouseButton
   alias Zpids.Input.MousePointer

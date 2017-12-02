@@ -1,11 +1,10 @@
-var path = require('path');
 module.exports = {
-  entry: {
-    app: './js/app.js'
-  },
+  entry: "./js/zpids.js",
   output: {
-    path: path.join(__dirname, '../priv/static'),
-    filename: 'js/[name].js'
+    path: __dirname,
+    filename: "index.js",
+    library: 'zpids',
+    libraryTarget: 'commonjs2'
   },
   module: {
     rules: [
@@ -15,7 +14,9 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
+            presets: [
+              ["@babel/preset-env", {"targets": {"node": "current"}}]
+            ]
           }
         }
       }

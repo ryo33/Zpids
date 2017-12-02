@@ -1,8 +1,8 @@
 defmodule Zpids.Web.UserController do
   use Zpids.Web, :controller
 
-  alias Zpids.Account
-  alias Zpids.Account.User
+  alias Zpids.Game.Account
+  alias Zpids.Game.Account.User
 
   def new(conn, _params) do
     changeset = Account.change_user(%User{})

@@ -1,6 +1,5 @@
 import channel from './channel.js'
-import Zpids from './zpids.js'
-import ZpidsObject from './zpids_object.js'
+import Zpids from 'zpids'
 
 const start = (width, height) => {
   document.body.style.margin = '0px'

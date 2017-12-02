@@ -1,5 +1,5 @@
-defmodule Zpids.Repo do
-  use Ecto.Repo, otp_app: :zpids
+defmodule Zpids.Game.Repo do
+  use Ecto.Repo, otp_app: :zpids_game
 
   @doc """
   Dynamically loads the repository url from the

@@ -1,8 +1,8 @@
 defmodule Zpids.Web.Guardian do
   use Guardian, otp_app: :zpids_web
 
-  alias Zpids.Account
-  alias Zpids.Account.User
+  alias Zpids.Game.Account
+  alias Zpids.Game.Account.User
 
   def from_token("user:" <> user_id) do
     case Account.get_user(user_id) do

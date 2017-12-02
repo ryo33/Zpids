@@ -1,5 +1,12 @@
 # Zpids
 
+A game engine for fun.
+
+## Features
+
+- Creating game entities with small processes which handles events.
+- All you need is Elixir to create your games.
+
 ## Dependencies
 
 - Elixir 1.5.1

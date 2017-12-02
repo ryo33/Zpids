@@ -1,7 +1,7 @@
-defmodule Zpids.Account.User do
+defmodule Zpids.Game.Account.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Zpids.Account.User
+  alias Zpids.Game.Account.User
 
 
   schema "users" do
