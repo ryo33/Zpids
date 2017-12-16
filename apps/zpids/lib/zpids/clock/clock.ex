@@ -3,6 +3,7 @@ defmodule Zpids.Clock do
 
   @fps [60, 30, 10, 1]
   @frame Enum.map(@fps, &(60 / &1 - 1))
+  @initial_value Stream.cycle([0]) |> Enum.take(length(@fps))
 
   import Zpids.EventDispatcher, only: [dispatch: 1]
   alias __MODULE__.Tick
@@ -12,7 +13,7 @@ defmodule Zpids.Clock do
   end
 
   def init(state) do
-    send self(), {:tick, [0, 0, 0, 0]}
+    send self(), {:tick, @initial_value}
     {:ok, state}
   end
 
