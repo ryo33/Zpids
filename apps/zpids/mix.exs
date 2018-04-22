@@ -8,7 +8,7 @@ defmodule Zpids.Mixfile do
      config_path: "../../config/config.exs",
      deps_path: "../../deps",
      lockfile: "../../mix.lock",
-     elixir: "~> 1.5.1",
+     elixir: "~> 1.6.3",
      elixirc_paths: elixirc_paths(Mix.env),
      start_permanent: Mix.env == :prod,
      aliases: aliases(),
@@ -31,9 +31,7 @@ defmodule Zpids.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:postgrex, ">= 0.0.0"},
-     {:ecto, "~> 2.1"},
-     {:comeonin, "~> 4.0"},
+    [{:comeonin, "~> 4.0"},
      {:uuid, "~> 1.1"},
      {:ex_json_schema, "~> 0.5.4"},
      {:poison, "~> 3.1"}]
@@ -48,6 +46,6 @@ defmodule Zpids.Mixfile do
   defp aliases do
     ["ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
      "ecto.reset": ["ecto.drop", "ecto.setup"],
-     "test": ["ecto.create --quiet", "ecto.migrate", "test"]]
+     "test": ["test"]]
   end
 end
